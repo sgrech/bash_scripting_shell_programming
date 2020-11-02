@@ -10,8 +10,8 @@ echo "Scripting is fun!"
 ```
 
 ```sh
-$ chmod 755 script.sh
-$ ./script.sh
+chmod 755 script.sh
+./script.sh
 ```
 
 ### Analyze running script
@@ -22,9 +22,9 @@ sleep 90
 ```
 
 ```sh
-$ ./sleepy.sh &
-$ ps -fp <<pid>>
-$ ps -ef | grep <<pid>> | grep -v grep
+./sleepy.sh &
+ps -fp <<pid>>
+ps -ef | grep <<pid>> | grep -v grep
 ```
 
 ### Variables
@@ -66,8 +66,6 @@ else
 fi
 ```
 
-#### Examples
-
 ```sh
 #!/bin/bash
 MY_SHELL="zsh"
@@ -94,8 +92,6 @@ do
 done
 ```
 
-#### Examples
-
 ```sh
 #!/bin/bash
 PICTURES=$(ls *jpg)
@@ -121,15 +117,13 @@ done
 ### Positional Parameters
 
 ```sh
-$ ./script.sh parameter1 parameter2 parameter3
+./script.sh parameter1 parameter2 parameter3
 ```
 
 $0:"script.sh"
 $1:"parameter1"
 $2:"parameter2"
 $3:"parameter3"
-
-#### Example
 
 ```sh
 #!/bin/bash
@@ -155,8 +149,6 @@ done
 read -p "PROMPT" VARABLE
 ```
 
-#### Example
-
 ```sh
 #!/bin/bash
 
@@ -168,4 +160,85 @@ passwd -l $USER
 
 # Create an archive of the home directory
 tar cf /tmp/${USER}.tar.gz /home/${USER}
+```
+
+## Return Codes and Exit Statuses
+
+- Every time a command is executed, it returns an exit status from 0 to 255
+- An exit status of 0 means OK by convention, any other is treated as an error condition
+
+```sh
+ls /not/here
+echo "$?" # outputs 2
+```
+
+```sh
+#!/bin/bash
+HOST="google.com"
+
+ping -c 1 $HOST
+RETURN_CODE=$?
+
+if [ "$RETURN_CODE" -eq "0" ]
+then
+  echo "$HOST reachable"
+else
+  echo "$HOST unreachable"
+fi
+```
+
+### && (AND) and || (OR)
+
+```sh
+# cp command will run only if mkdir command is successful
+mkdir /tmp/bak && cp test.txt /tmp/bak/
+
+# if the first command fails the second command will execute
+cp test.txt /tmp/bak || cp test.txt /tmp/
+```
+
+```sh
+#!/bin/bash
+HOST="google.com"
+
+ping -c 1 $HOST && echo "$HOST reachable"
+ping -c 1 $HOST || echo "$HOST unreachable"
+```
+
+### The semicolon (;)
+
+- Separate commands with a semicolon to ensure all commands are executed regardless of the exit status
+
+```sh
+cp test.txt /tmp/bak/ ; cp test.txt /tmp
+
+# Same as
+cp test.txt /tmp/bak/
+cp test.txt /tmp
+```
+
+### Exit command
+
+- Explicitly define the return code
+- The default value is that of the last command executed
+
+```sh
+exit 0
+exit 1
+exit n
+```
+
+```sh
+#!/bin/bash
+HOST="google.com"
+
+ping -c 1 $HOST
+RETURN_CODE=$?
+
+if [ "$RETURN_CODE" -ne "0" ]
+then
+  echo "$HOST unreachable"
+  exit 1
+fi
+exit 0
 ```
