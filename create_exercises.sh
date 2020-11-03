@@ -1,5 +1,5 @@
 #!/bin/bash
-EXERCISE_PATH_PREFIX=./practice_exercises/section2_exercise
+EXERCISE_PATH_PREFIX=./practice_exercises/section4_exercise
 
 for EXERCISE in $@
 do

@@ -242,3 +242,137 @@ then
 fi
 exit 0
 ```
+
+## Shell functions
+
+### Creating a function
+
+- two ways to create a function
+
+```sh
+function function-name() {
+  # Code goes here.
+}
+
+function-name() {
+  # Code goes here
+}
+```
+
+### Calling a function
+
+```sh
+#!/bin/bash
+function hello() {
+  echo "Hello!"
+}
+
+# note no parenthesis necessary
+hello
+```
+
+### Functions can call other functions
+
+```sh
+#!/bin/bash
+function hello() {
+  echo "Hello!"
+  now
+}
+
+function now() {
+  echo "It's $(date +%r)"
+}
+
+hello
+```
+
+### Positional Parameters
+
+- Functions have access to positional parameters as well
+- \$0 still refers to script name
+
+```sh
+#!/bin/bash
+function hello() {
+  echo "Hello $1"
+}
+
+hello Jason
+```
+
+```sh
+#!/bin/bash
+function hello() {
+  for NAME in $@
+  do
+    echo "Hello $NAME"
+  done
+}
+
+hello Jason Dan Ryan
+```
+
+### Variable Scope
+
+- by default, variables are global
+- variables have to be defined before function is called
+
+```sh
+#!/bin/bash
+my_function() {
+  GLOBAL_VAR=1
+}
+
+# GLOBAL_VAR not available yet
+echo $GLOBAL_VAR
+
+my_function
+
+# GLOBAL_VAR is now available
+echo $GLOBAL_VAR
+```
+
+### Local Variables
+
+- Can only be accessed within function
+- Create using `local` keyword
+- Only functions can have local variables
+- Best practice to keep variables local in functions
+
+### Exit Status (Return Codes)
+
+- Functions have an exit status
+- Explicitly
+  - return `<RETURN_CODE>`
+- Implicitly
+  - The exit status of the last command executed in the function
+- Return statement only accepts number from 0 to 255
+
+```sh
+#!/bin/bash
+function backup_file() {
+  if [ -f $1 ]
+  then
+    # $$ means script PID
+    local BACK="/tmp/$(basename ${1}).$(date +%F).$$"
+    echo "Backing up $1 to ${BACK}"
+
+    # The exit status of the function will
+    # be the exit status of cp command
+    cp $1 $BACK
+  else
+    # The file does not exist
+    return 1
+  fi
+}
+
+backup_file $1
+if [ $? -eq 0 ]
+then
+  echo "Backup succedded!"
+else
+  echo "Backup failed!"
+  exit 1
+fi
+```
