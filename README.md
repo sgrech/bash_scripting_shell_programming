@@ -376,3 +376,66 @@ else
   exit 1
 fi
 ```
+
+## Wildcards
+
+- A character or string used for pattern matching
+- Globbing expands the wildcard character into a list of files and/or directories (paths)
+- widlcards can be used with most commands
+  - `ls`
+  - `rm`
+  - `cp`
+
+#### Main wildcards
+
+- `*` - matches 0 or more characters
+  - `*.txt`
+  - `a*`
+  - `a*.txt`
+- `?` - matches exactly one character
+  - `?.txt`
+  - `a?`
+  - `a?.txt`
+
+#### Character class
+
+- `[]` - A character class
+  - matches any of the characters included between the brackets
+  - matches exactly one character
+  - `[aeiou]`
+  - `ca[nt]*`
+    - can
+    - cat
+    - candy
+    - catch
+- `[!]` - A character class
+  - matches any of the characters NOT included between the brackets
+  - matches exactly one character
+  - `[!aeiou]`
+    - baseball
+    - cricket
+  - `ca[nt]*`
+    - can
+    - cat
+    - candy
+    - catch
+- use two characters separated by a hyphen to create a range in a character class
+  - `[a-g]*`
+    - Matches all files that start with a, b, c, d, e, f, g
+  - `[3-6]*`
+    - matches all files taht start with 3, 4, 5, 6
+
+#### Named Character classes
+
+- `[[:alpha:]]`
+- `[[:alnum:]]`
+- `[[:digit:]]`
+- `[[:lower:]]`
+- `[[:space:]]`
+- `[[:upper:]]`
+
+#### Matching wildcard characters
+
+- `\` - escape character
+- match all files that end with a question mark
+  - `*\?`
